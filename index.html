@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>北京 → 上海 · 3-4天路书</title>
+<style>
+:root{
+  --bg:#0E1621; --tint:#16222F; --surface:#1E2C3C;
+  --t1:#F2F6FA; --t2:#B9C6D4; --t3:#7C8CA0;
+  --acc:#3FA7FF; --acc-h:#6FBEFF; --on:#0E1621;
+  --gold:#E8B34B;
+  --good:#38D39F; --warn:#F0B429; --bad:#F25C5C;
+  --radius:16px; --btnr:999px;
+  --border:rgba(242,246,250,.10);
+  --hero-w:600;
+  --disp:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{font-family:var(--disp);background:var(--bg);color:var(--t2);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+
+/* Hero */
+.hero{position:relative;min-height:100svh;min-height:100vh;display:flex;align-items:flex-end;background:url('https://images.pexels.com/photos/745243/pexels-photo-745243.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75') center/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,22,33,.35),rgba(14,22,33,.15) 40%,rgba(14,22,33,.95))}
+.hero-in{position:relative;z-index:2;width:100%;max-width:1060px;margin:0 auto;padding:0 20px 56px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(243,242,246,.14);border:1px solid var(--border);color:#CDE4FF;font-size:12px;letter-spacing:.12em;padding:6px 14px;border-radius:var(--btnr);margin-bottom:16px}
+.hero h1{color:#fff;font-size:clamp(30px,6vw,52px);font-weight:800;line-height:1.15;letter-spacing:.02em;max-width:14em}
+.hero .sub{margin-top:14px;color:#D6E2EE;font-size:clamp(15px,2.6vw,19px);max-width:34em}
+.hero .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);color:#EAF2FA;font-size:13px;padding:7px 14px;border-radius:var(--btnr)}
+.timestamp{position:absolute;top:16px;right:18px;z-index:2;background:rgba(14,22,33,.6);border:1px solid var(--border);color:#CDE4FF;font-size:11px;padding:6px 12px;border-radius:var(--btnr);text-align:right;line-height:1.5}
+.timestamp b{color:#fff}
+
+/* Nav */
+.navbar{position:sticky;top:0;z-index:50;background:rgba(14,22,33,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-links{display:flex;gap:2px;overflow-x:auto;max-width:1060px;margin:0 auto;padding:0 10px;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{flex:1 0 auto;white-space:nowrap;color:var(--t3);font-size:14px;font-weight:600;padding:14px 16px;text-align:center;border-bottom:2px solid transparent;transition:.2s}
+.nav-links a.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* Section headings */
+.sec{padding:56px 0}
+.sec.tint{background:var(--tint)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:26px}
+.sec-head h2{color:var(--t1);font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:.01em}
+.sec-head .tag{color:var(--t3);font-size:13px;white-space:nowrap}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat{background:var(--tint);border-radius:12px;padding:14px 16px}
+.stat .k{font-size:12px;color:var(--t3)}
+.stat .v{color:var(--t1);font-size:17px;font-weight:700;margin-top:2px}
+.stat .v.gold{color:var(--gold)}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+.tab{border:1px solid var(--border);background:var(--surface);color:var(--t2);font-size:14px;font-weight:600;padding:9px 18px;border-radius:var(--btnr);cursor:pointer;transition:.2s}
+.tab.active{background:var(--acc);color:var(--on);border-color:var(--acc)}
+.tab-pane{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.tab-pane.show{display:block}
+
+/* Day card */
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;margin-top:20px}
+.day-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.day-badge{background:linear-gradient(135deg,var(--acc),#2F7FE0);color:#fff;font-weight:800;font-size:15px;padding:7px 14px;border-radius:var(--btnr)}
+.day-title{color:var(--t1);font-size:19px;font-weight:700}
+.day-title small{color:var(--t3);font-weight:500;font-size:13px}
+.transport-tag{margin-left:auto;background:var(--tint);color:var(--acc);font-size:12px;font-weight:600;padding:5px 12px;border-radius:var(--btnr)}
+.timeline{border-left:2px solid var(--border);margin:6px 0 6px 6px;padding-left:18px}
+.node{position:relative;padding:10px 0}
+.node::before{content:"";position:absolute;left:-25px;top:17px;width:10px;height:10px;border-radius:50%;background:var(--acc);border:2px solid var(--bg)}
+.node .time{color:var(--acc);font-weight:700;font-size:14px}
+.node .what{color:var(--t1);font-weight:600;font-size:15px;margin-top:1px}
+.node .note{color:var(--t3);font-size:13px;margin-top:2px}
+.node.hot .what::after{content:"·";color:var(--gold);margin-left:6px}
+.block{margin:14px 0}
+.block h4{color:var(--t1);font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.block h4 .ic{color:var(--acc)}
+.block ul{list-style:none}
+.block li{font-size:14px;padding:5px 0 5px 22px;position:relative}
+.block li::before{content:"";position:absolute;left:4px;top:12px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.food-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;background:var(--tint);border-radius:10px;margin-top:8px;font-size:14px}
+.food-item .n{color:var(--t1);font-weight:600}
+.food-item .p{color:var(--t3);font-size:12px;white-space:nowrap}
+.food-item a{color:var(--acc);font-size:12px;font-weight:600;white-space:nowrap}
+
+/* Attraction expand */
+.attr{background:var(--tint);border:1px solid var(--border);border-radius:12px;margin-top:12px;overflow:hidden}
+.attr-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;background:none;border:none;color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;text-align:left}
+.attr-btn .chev{color:var(--acc);transition:transform .25s;font-size:12px}
+.attr.open .attr-btn .chev{transform:rotate(180deg)}
+.attr-body{display:none;padding:0 16px 16px;font-size:14px;color:var(--t2)}
+.attr.open .attr-body{display:block}
+.attr-body h5{color:var(--gold);font-size:13px;font-weight:700;margin:12px 0 4px;letter-spacing:.04em}
+.attr-body p,.attr-body li{font-size:14px;line-height:1.7}
+.attr-body ul{list-style:none;padding:0}
+.attr-body li{padding:3px 0 3px 18px;position:relative}
+.attr-body li::before{content:"";position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:var(--acc)}
+
+/* Map iframe */
+.map-box{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:12px;background:var(--tint)}
+.map-box iframe{width:100%;height:280px;border:0;display:block}
+.map-cap{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;font-size:12px;color:var(--t3);background:var(--tint)}
+.map-cap .note{color:var(--warn)}
+
+/* Nav button */
+.btn-nav{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--acc),#2F7FE0);color:#fff;font-weight:700;font-size:15px;padding:14px;border-radius:var(--btnr);margin-top:14px;border:none;cursor:pointer}
+.btn-nav:hover{filter:brightness(1.08)}
+
+/* Attr image */
+.attr-img{width:100%;height:auto;border-radius:10px;margin-top:12px}
+.img-cap{font-size:11px;color:var(--t3);margin-top:4px;line-height:1.5}
+.img-cap a{color:var(--acc)}
+
+/* Info badges */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--btnr);margin-left:6px;vertical-align:middle}
+.badge.live{background:rgba(56,211,159,.16);color:var(--good)}
+.badge.est{background:rgba(240,180,41,.16);color:var(--warn)}
+.badge.conf{background:var(--tint);color:var(--t3)}
+
+/* Appendix */
+.app-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:16px}
+.app-card h3{color:var(--t1);font-size:16px;margin-bottom:10px}
+.app-card ul{list-style:none}
+.app-card li{font-size:14px;padding:4px 0;color:var(--t2)}
+.app-card li b{color:var(--t1)}
+
+footer{background:var(--tint);padding:34px 0;margin-top:40px;border-top:1px solid var(--border)}
+footer .wrap{color:var(--t3);font-size:12px;line-height:1.8}
+
+/* Responsive */
+@media(min-width:720px){
+  .grid2{grid-template-columns:1fr 1fr}
+  .stat-row{grid-template-columns:repeat(4,1fr)}
+  .day-body{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="timestamp">路书生成于 <b>2026-11-15</b><br>易变信息基于该时刻实时数据</div>
+  <div class="hero-in">
+    <div class="eyebrow">🍂 魔都 · 都市漫游</div>
+    <h1>北京 → 上海<br>3-4 天都市深度路书</h1>
+    <p class="sub">外滩夜景 × 豫园江南 × 陆家嘴云端 × 武康路梧桐——一趟把「百年租界」与「摩天未来」都装进口袋的轻奢都市之旅。全程高铁/飞机，日均步数 1.2 万，适合情侣、闺蜜或一人自由行。</p>
+    <div class="pills">
+      <span class="pill">总里程 ≈ 1325km（高铁）</span>
+      <span class="pill">3天2晚 / 4天3晚</span>
+      <span class="pill">最佳季节 3-5月/10-11月</span>
+      <span class="pill">预算 ¥2200-3200/人</span>
+      <span class="pill">难度 ★☆☆☆☆</span>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <div class="nav-links">
+    <a href="#overview">概览</a>
+    <a href="#day1">Day 1</a>
+    <a href="#day2">Day 2</a>
+    <a href="#day3">Day 3</a>
+    <a href="#day4">Day 4 可选</a>
+    <a href="#appendix">附录</a>
+  </div>
+</nav>
+
+<!-- Overview -->
+<section class="sec" id="overview">
+  <div class="wrap">
+    <div class="sec-head"><h2>行前总览</h2><span class="tag">At a glance</span></div>
+    <div class="stat-row">
+      <div class="stat"><div class="k">总里程</div><div class="v">≈1325km</div></div>
+      <div class="stat"><div class="k">总天数</div><div class="v">3-4天</div></div>
+      <div class="stat"><div class="k">每日步数</div><div class="v">1.1-1.4万</div></div>
+      <div class="stat"><div class="k">预算/人</div><div class="v gold">¥2200-3200</div></div>
+    </div>
+
+    <div class="tabs" id="transTabs">
+      <button class="tab active" data-t="t-hsr">🚄 高铁</button>
+      <button class="tab" data-t="t-air">✈️ 飞机</button>
+      <button class="tab" data-t="t-car">🚗 自驾</button>
+    </div>
+
+    <div class="tab-pane show" id="t-hsr">
+      <div class="grid2">
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">🚄 京沪高铁 <span class="badge live">🟢 建议</span></h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· 北京南 → 上海虹桥，最快 <b>4h18m</b></li>
+            <li>· 二等座 <b>¥553-662</b>，商务座 ¥1748 <span class="badge est">⚪ AI估算</span></li>
+            <li>· 班次极密（5-20分钟/班），随买随走</li>
+            <li>· 每日首班 <b>07:00</b> 左右，可从容吃早餐</li>
+          </ul>
+          <p style="font-size:12px;color:var(--t3);margin-top:10px">数据源：12306 · 抓取于 2026-11-15 <a href="https://www.12306.cn" target="_blank" style="color:var(--acc)">官网复核 →</a></p>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">🕐 本路书建议班次</h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· <b>Day1 09:00 发车</b> G字头，13:20 抵虹桥（约4h20m）</li>
+            <li>· 回程 Day3 傍晚 17:30-19:00 班次，22:30 前到京</li>
+            <li>· 建议提前 1 天购票选靠窗座</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t-air">
+      <div class="grid2">
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">✈️ 北京 → 上海虹桥/浦东 <span class="badge live">🟢 实时核验</span></h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· 飞行约 <b>2h05m</b>，大兴/首都均有多班</li>
+            <li>· 经济舱 <b>¥380-900</b>（含税，浮动大）<span class="badge est">⚪ AI估算</span></li>
+            <li>· 建议选 <b>虹桥机场</b>（离市区地铁 30min）</li>
+            <li>· 浦东机场距市区远（1h+），尽量避免落地晚航班</li>
+          </ul>
+          <p style="font-size:12px;color:var(--t3);margin-top:10px">数据源：航司官网 · 2026-11-15 <a href="https://www.ctrip.com" target="_blank" style="color:var(--acc)">比价复核 →</a></p>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">🕐 本路书建议航班</h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· <b>Day1 09:00 起飞</b>，11:10 抵虹桥，从容入境进城</li>
+            <li>· 回程 Day3 选 18:00 后航班</li>
+            <li>· 机场地铁 2 号线/10 号线直连市中心</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="t-car">
+      <div class="grid2">
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">🚗 自驾（不推荐长途）<span class="badge est">⚪ AI估算</span></h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· 北京 → 上海 <b>≈1260km</b>，约 <b>13-14h</b>（含休息）</li>
+            <li>· 高速费约 <b>¥570</b>，油费约 ¥700</li>
+            <li>· 上海外牌高架 <b>工作日早晚高峰限行</b>（7-10/16-19点），市内建议地铁+打车</li>
+            <li>· 若非要去周边（朱家角/迪士尼），可租车当地一日</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--t1);margin-bottom:8px">⚠️ 提醒</h4>
+          <ul style="list-style:none;font-size:14px">
+            <li>· 单程近 1300km，疲劳驾驶风险高</li>
+            <li>· 强烈建议 <b>高铁往返</b>，市内纯靠地铁/公交/步行</li>
+            <li>· 若坚持自驾，分 2 天行驶，中途宿济南</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h4 style="color:var(--t1);margin-bottom:10px">🗺 区域总览（示意图，非实时轨迹）</h4>
+      <div class="map-box">
+        <iframe src="https://uri.amap.com/marker?position=121.4900,31.2400&name=上海&src=guide" loading="lazy"></iframe>
+        <div class="map-cap"><span>高德地图 · 上海城区</span><span class="note">地图为静态示意，实时路况请以 App 为准</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day 1 -->
+<section class="sec tint" id="day1">
+  <div class="wrap">
+    <div class="sec-head"><h2>Day 1 · 抵沪 &amp; 南京路·外滩</h2><span class="tag">北京 → 上海</span></div>
+    <div class="day-card">
+      <div class="day-top">
+        <span class="day-badge">D1</span>
+        <span class="day-title">抵沪 · 入住 · 南京路 &amp; 外滩 <small>全程公交</small></span>
+        <span class="transport-tag">🚆 高铁 + 🚇 地铁</span>
+      </div>
+      <div class="day-body">
+        <div>
+          <div class="timeline">
+            <div class="node"><div class="time">09:00</div><div class="what">北京南站 发车（G字头）</div><div class="note">高铁直达，选靠窗座，路上可备午餐或到站吃</div></div>
+            <div class="node"><div class="time">13:20</div><div class="what">抵达 上海虹桥站</div><div class="note">地铁 2 号线/10 号线进城，约 30-40 分钟</div></div>
+            <div class="node"><div class="time">14:30</div><div class="what">入住 酒店（人民广场/南京东路）</div><div class="note">寄存行李后轻装出发</div></div>
+            <div class="node hot"><div class="time">15:30</div><div class="what">南京路步行街 逛街</div><div class="note">老上海「十里洋场」商业街，百年百货/网红旗舰店</div></div>
+            <div class="node hot"><div class="time">17:00</div><div class="what">外滩日景漫步</div><div class="note">沿黄浦江看万国建筑群对岸陆家嘴天际线</div></div>
+            <div class="node hot"><div class="time">18:30</div><div class="what">本帮菜晚餐</div><div class="note">老字号红烧肉/生煎，人均 ¥80-120</div></div>
+            <div class="node hot"><div class="time">20:00</div><div class="what">外滩夜景 · 亮灯时刻</div><div class="note">19:00 后两岸亮灯最出片，东方明珠+上海中心同框</div></div>
+          </div>
+
+          <div class="block"><h4><span class="ic">🛏️</span> 本日住宿（预算 ¥300-400/晚）</h4>
+            <ul>
+              <li><b>主推 · 全季酒店（人民广场店）</b> ¥330-390/晚 — 距南京东路地铁站步行 5 分钟，隔音好、干净，含早餐 <span class="badge est">⚪ AI估算</span></li>
+              <li><b>备选 · 亚朵轻居（外滩店）</b> ¥360-400/晚 — 近外滩，步行即达，位置绝佳</li>
+            </ul>
+            <p style="font-size:12px;color:var(--t3);margin-top:6px">价位为 AI 估算，以 OTA 实时为准 <a href="https://hotels.ctrip.com" target="_blank" style="color:var(--acc)">比价 →</a></p>
+          </div>
+
+          <div class="block"><h4><span class="ic">🍜</span> 本日美食</h4>
+            <div class="food-item"><span class="n">大壶春生煎</span><span class="p">人均 ¥25</span><a href="https://uri.amap.com/search?keyword=大壶春生煎&city=310000" target="_blank">地图 →</a></div>
+            <div class="food-item"><span class="n">上海老饭店（本帮红烧肉）</span><span class="p">人均 ¥110</span><a href="https://uri.amap.com/search?keyword=上海老饭店&city=310000" target="_blank">地图 →</a></div>
+            <div class="food-item"><span class="n">沈大成青团/鲜肉月饼</span><span class="p">人均 ¥20</span><a href="https://uri.amap.com/search?keyword=沈大成&city=310000" target="_blank">地图 →</a></div>
+          </div>
+
+          <button class="btn-nav" onclick="location.href='https://uri.amap.com/marker?position=121.4900,31.2400&name=外滩'">一键导航 · 外滩</button>
+        </div>
+
+        <div>
+          <div class="map-box">
+            <iframe src="https://uri.amap.com/marker?position=121.4900,31.2400&name=外滩&src=guide" loading="lazy"></iframe>
+            <div class="map-cap"><span>南京路→外滩 一带</span></div>
+          </div>
+          <div class="attr">
+            <button class="attr-btn" onclick="toggleAttr(this)">🏛 外滩 · 万国建筑博览群 <span class="chev">▼</span></button>
+            <div class="attr-body">
+              <h5>深度看点</h5>
+              <p>外滩是上海近代史的露天博物馆，52 栋风格各异的万国建筑群（哥特、巴洛克、文艺复兴）沿黄浦江西岸一字排开，与对岸陆家嘴现代摩天楼形成时空对话。「外滩源」至「十六铺」一线约 1.5km，入夜后建筑打灯最美。</p>
+              <h5>📷 拍照打卡点</h5>
+              <ul>
+                <li>中山东一路观景台护栏位：白天拍陆家嘴「三件套」+ 江轮</li>
+                <li>延安东路外滩口：拍东方明珠正面全景</li>
+                <li>19:00 亮灯后：万国建筑暖黄灯光 + 蓝调天空剪影</li>
+              </ul>
+              <h5>🍜 周边美食</h5>
+              <ul>
+                <li>大壶春生煎（外滩店）· 人均 ¥25</li>
+                <li>上海老饭店 · 本帮红烧肉 · 人均 ¥110</li>
+              </ul>
+              <h5>🗺 游览动线</h5>
+              <p>建议南京东路地铁站 → 步行穿过南京路步行街 → 外滩观景台 → 沿江向北至外白渡桥（约 2h）。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day 2 -->
+<section class="sec" id="day2">
+  <div class="wrap">
+    <div class="sec-head"><h2>Day 2 · 豫园 · 城隍庙 · 新天地</h2><span class="tag">上海 · 老城厢漫游</span></div>
+    <div class="day-card">
+      <div class="day-top">
+        <span class="day-badge">D2</span>
+        <span class="day-title">豫园 · 城隍庙 · 新天地 <small>全程公交/步行</small></span>
+        <span class="transport-tag">🚇 地铁 + 🚶 步行</span>
+      </div>
+      <div class="day-body">
+        <div>
+          <div class="timeline">
+            <div class="node"><div class="time">09:00</div><div class="what">酒店出发，地铁至 豫园站</div><div class="note">10号线直达，约 15 分钟</div></div>
+            <div class="node hot"><div class="time">09:40</div><div class="what">豫园 · 江南园林</div><div class="note">九曲桥、玉玲珑假山、古典亭台，明代园林代表作</div></div>
+            <div class="node hot"><div class="time">12:00</div><div class="what">城隍庙商圈 午餐</div><div class="note">南翔小笼、梨膏糖、五香豆，老街小吃一条龙</div></div>
+            <div class="node hot"><div class="time">14:00</div><div class="what">新天地 · 石库门街区</div><div class="note">旧式石库门里弄改造的潮流地标，中西合璧咖啡街</div></div>
+            <div class="node"><div class="time">17:00</div><div class="what">田子坊（可选）</div><div class="note">弄堂艺术园区，手作小店与小吃，体力足可加</div></div>
+            <div class="node hot"><div class="time">18:30</div><div class="what">晚餐（本帮菜/小笼）</div><div class="note">淮海路商圈觅食，人均 ¥70-120</div></div>
+            <div class="node hot"><div class="time">20:00</div><div class="what">可选：外滩夜景二刷 / 早回休息</div></div>
+          </div>
+
+          <div class="block"><h4><span class="ic">🛏️</span> 本日住宿（续住，预算 ¥300-400/晚）</h4>
+            <ul>
+              <li><b>续住 D1 酒店</b> ¥330-390/晚 — 免搬行李，位置仍是核心区 <span class="badge est">⚪ AI估算</span></li>
+              <li><b>备选 · 如家精选（豫园店）</b> ¥300-360/晚 — 近豫园/城隍庙，方便次日</li>
+            </ul>
+          </div>
+
+          <div class="block"><h4><span class="ic">🍜</span> 本日美食</h4>
+            <div class="food-item"><span class="n">南翔馒头店（豫园·蟹粉小笼）</span><span class="p">人均 ¥60</span><a href="https://uri.amap.com/search?keyword=南翔馒头店&city=310000" target="_blank">地图 →</a></div>
+            <div class="food-item"><span class="n">绿波廊（本帮菜老字号）</span><span class="p">人均 ¥120</span><a href="https://uri.amap.com/search?keyword=绿波廊&city=310000" target="_blank">地图 →</a></div>
+            <div class="food-item"><span class="n">新天地 弄堂咖啡</span><span class="p">人均 ¥35</span></div>
+          </div>
+
+          <button class="btn-nav" onclick="location.href='https://uri.amap.com/marker?position=121.4900,31.2200&name=豫园'">一键导航 · 豫园</button>
+        </div>
+
+        <div>
+          <div class="map-box">
+            <iframe src="https://uri.amap.com/marker?position=121.4900,31.2200&name=豫园&src=guide" loading="lazy"></iframe>
+            <div class="map-cap"><span>豫园 / 城隍庙一带</span></div>
+          </div>
+          <img class="attr-img" src="https://images.pexels.com/photos/6860974/pexels-photo-6860974.jpeg?auto=compress&cs=tinysrgb&w=1000&q=75" alt="豫园商城夜景">
+          <div class="img-cap">豫园商城夜景 · 图源 <a href="https://www.pexels.com/photo/6860974/" target="_blank">Fernando Reyes / Pexels</a></div>
+
+          <div class="attr">
+            <button class="attr-btn" onclick="toggleAttr(this)">🏮 豫园 &amp; 城隍庙 <span class="chev">▼</span></button>
+            <div class="attr-body">
+              <h5>深度看点</h5>
+              <p>豫园建于明代（1559年），是上海仅存的古典园林，江南园林「以少胜多」的典范——亭台楼阁、曲桥假山浓缩于 2 公顷内。城隍庙及豫园商城是上海老城厢核心，庙会式商业氛围浓厚，九曲桥为必走之处。</p>
+              <h5>📷 拍照打卡点</h5>
+              <ul>
+                <li>九曲桥湖心亭：拍桥、亭与楼宇倒影</li>
+                <li>玉玲珑假山：豫园镇园之宝，玲珑多孔</li>
+                <li>城隍庙牌坊 + 老街灯笼：傍晚红灯笼氛围绝佳</li>
+              </ul>
+              <h5>🍜 周边美食</h5>
+              <ul>
+                <li>南翔馒头店 · 蟹粉小笼 · 人均 ¥60</li>
+                <li>绿波廊 · 本帮菜 · 人均 ¥120</li>
+                <li>梨膏糖 / 五香豆 / 糖粥 · 小吃 ¥10-20</li>
+              </ul>
+              <h5>🗺 游览动线</h5>
+              <p>豫园地铁站 → 城隍庙商圈 → 豫园园林（约 2-2.5h）→ 午餐 → 出园步行至新天地（约 20min）。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day 3 -->
+<section class="sec tint" id="day3">
+  <div class="wrap">
+    <div class="sec-head"><h2>Day 3 · 陆家嘴 · 武康路 · 返程</h2><span class="tag">上海 → 北京</span></div>
+    <div class="day-card">
+      <div class="day-top">
+        <span class="day-badge">D3</span>
+        <span class="day-title">陆家嘴 · 武康路 · 返程 <small>全日市区</small></span>
+        <span class="transport-tag">🚇 地铁 + 🚶 步行 + 🚆 高铁</span>
+      </div>
+      <div class="day-body">
+        <div>
+          <div class="timeline">
+            <div class="node"><div class="time">09:00</div><div class="what">酒店出发，地铁至 陆家嘴</div><div class="note">2号线直达，跨江到浦东金融城</div></div>
+            <div class="node hot"><div class="time">09:40</div><div class="what">陆家嘴 · 东方明珠 / 上海中心</div><div class="note">登高俯瞰全城，可选东方明珠或上海中心「上海之巅」观景层</div></div>
+            <div class="node hot"><div class="time">13:00</div><div class="what">武康路 · 梧桐街区</div><div class="note">武康大楼、名人故居、法式风情马路，出片圣地</div></div>
+            <div class="node hot"><div class="time">15:30</div><div class="what">淮海路 / 思南路 走走停停</div><div class="note">老洋房+潮流店铺混搭，买伴手礼</div></div>
+            <div class="node"><div class="time">17:30</div><div class="what">回酒店取行李 → 虹桥站</div><div class="note">预留充足进站时间</div></div>
+            <div class="node hot"><div class="time">18:30-19:00</div><div class="what">高铁返京（约4h20m）</div><div class="note">22:30 前后到京，结束行程</div></div>
+          </div>
+
+          <div class="block"><h4><span class="ic">🛏️</span> 本日住宿</h4>
+            <ul>
+              <li><b>返程日无住宿</b> — 退房后行李寄存前台或行李房</li>
+            </ul>
+          </div>
+
+          <div class="block"><h4><span class="ic">🍜</span> 本日美食</h4>
+            <div class="food-item"><span class="n">陆家嘴 正大广场/国金 简餐</span><span class="p">人均 ¥70</span></div>
+            <div class="food-item"><span class="n">武康路 网红咖啡馆</span><span class="p">人均 ¥40</span></div>
+            <div class="food-item"><span class="n">淮海路 本帮小吃（德兴馆等）</span><span class="p">人均 ¥60</span><a href="https://uri.amap.com/search?keyword=德兴馆&city=310000" target="_blank">地图 →</a></div>
+          </div>
+
+          <button class="btn-nav" onclick="location.href='https://uri.amap.com/marker?position=121.5000,31.2400&name=东方明珠'">一键导航 · 东方明珠</button>
+        </div>
+
+        <div>
+          <div class="map-box">
+            <iframe src="https://uri.amap.com/marker?position=121.4300,31.2100&name=武康路&src=guide" loading="lazy"></iframe>
+            <div class="map-cap"><span>武康路街区</span></div>
+          </div>
+          <img class="attr-img" src="https://images.pexels.com/photos/36064465/pexels-photo-36064465.jpeg?auto=compress&cs=tinysrgb&w=1000&q=75" alt="武康大楼">
+          <div class="img-cap">武康大楼 · 图源 <a href="https://www.pexels.com/photo/36064465/" target="_blank">Bingqian Li / Pexels</a></div>
+
+          <div class="attr">
+            <button class="attr-btn" onclick="toggleAttr(this)">🏙 陆家嘴 &amp; 武康路 <span class="chev">▼</span></button>
+            <div class="attr-body">
+              <h5>深度看点</h5>
+              <p><b>陆家嘴</b>：中国金融中心的天际线名片，东方明珠（468m）、上海中心（632m，全球第二高楼）、金茂大厦、上海环球金融中心「三件套」同框，登高俯瞰浦江两岸。<b>武康路</b>：上海最文艺的历史风貌街，武康大楼（邬达克设计，欧洲文艺复兴风格）是网红打卡原点，沿途法式梧桐与名人故居。</p>
+              <h5>📷 拍照打卡点</h5>
+              <ul>
+                <li>东方明珠观景台 / 上海中心「上海之巅」观景层：俯瞰全城</li>
+                <li>武康大楼转角：红绿灯路口全景，需等空镜</li>
+                <li>国金中心天桥：拍三件套仰视视角</li>
+              </ul>
+              <h5>🍜 周边美食</h5>
+              <ul>
+                <li>陆家嘴：正大广场/国金中心美食层 · 人均 ¥70</li>
+                <li>武康路：各色精品咖啡馆 · 人均 ¥40</li>
+              </ul>
+              <h5>🗺 游览动线</h5>
+              <p>陆家嘴地铁站 → 东方明珠/上海中心登高（约 2-2.5h）→ 地铁回浦西 → 武康路漫步（约 2h）→ 淮海路/思南路 → 返程。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day 4 optional -->
+<section class="sec" id="day4">
+  <div class="wrap">
+    <div class="sec-head"><h2>Day 4（可选）· 迪士尼 / 朱家角</h2><span class="tag">上海周边延伸</span></div>
+    <div class="day-card">
+      <div class="day-top">
+        <span class="day-badge">D4+</span>
+        <span class="day-title">上海迪士尼乐园 / 朱家角古镇 <small>二选一</small></span>
+        <span class="transport-tag">🚇 地铁 / 🚌 大巴</span>
+      </div>
+      <div class="day-body">
+        <div>
+          <div class="timeline">
+            <div class="node"><div class="time">09:00</div><div class="what">出发（二选一）</div><div class="note">迪士尼：地铁11号线直达；朱家角：地铁17号线</div></div>
+            <div class="node hot"><div class="time">全天</div><div class="what">A｜上海迪士尼乐园</div><div class="note">明日世界/奇幻童话城堡/创极速光轮，需官网预约门票</div></div>
+            <div class="node hot"><div class="time">半日</div><div class="what">B｜朱家角古镇</div><div class="note">水乡放生桥、课植园、特色小吃，适合休闲半日</div></div>
+            <div class="node"><div class="time">晚间</div><div class="what">返程高铁/夜宿</div><div class="note">可选当晚高铁返京，或续住一晚次日再返</div></div>
+          </div>
+
+          <div class="block"><h4><span class="ic">🛏️</span> 本日住宿</h4>
+            <ul>
+              <li>若续住一晚：预算 ¥300-400/晚，可再宿市中心酒店 <span class="badge est">⚪ AI估算</span></li>
+            </ul>
+          </div>
+
+          <div class="block"><h4><span class="ic">🍜</span> 本日美食</h4>
+            <div class="food-item"><span class="n">朱家角 阿婆粽 / 扎肉 / 糖藕</span><span class="p">人均 ¥40</span></div>
+            <div class="food-item"><span class="n">迪士尼园区餐饮</span><span class="p">人均 ¥90</span></div>
+          </div>
+
+          <button class="btn-nav" onclick="location.href='https://uri.amap.com/marker?position=121.0400,31.1400&name=上海迪士尼乐园'">一键导航 · 迪士尼</button>
+        </div>
+
+        <div>
+          <div class="map-box">
+            <iframe src="https://uri.amap.com/marker?position=121.0400,31.1400&name=上海迪士尼&src=guide" loading="lazy"></iframe>
+            <div class="map-cap"><span>迪士尼 / 朱家角（可选）</span></div>
+          </div>
+          <div class="attr">
+            <button class="attr-btn" onclick="toggleAttr(this)">🎢 上海迪士尼乐园 <span class="chev">▼</span></button>
+            <div class="attr-body">
+              <h5>深度看点</h5>
+              <p>中国大陆首座迪士尼乐园，七大主题园区：明日世界、探险岛、宝藏湾、梦幻世界、奇想花园、米奇大街、玩具总动员。核心项目创极速光轮（过山车）、加勒比海盗沉落宝藏、奇幻童话城堡烟花秀（夜晚）。</p>
+              <h5>📷 拍照打卡点</h5>
+              <ul>
+                <li>奇幻童话城堡正面：白天/烟花夜景</li>
+                <li>明日世界：未来感建筑大片</li>
+                <li>米奇大街：与卡通人物合影</li>
+              </ul>
+              <h5>🗺 注意事项</h5>
+              <ul>
+                <li>门票需<b>提前官网预约</b>，旺季 ¥475-875/人 <span class="badge est">⚪ AI估算</span></li>
+                <li>入园禁带玻璃瓶/自拍杆，可带未拆封零食</li>
+              </ul>
+              <p style="font-size:12px;color:var(--t3);margin-top:8px">票价/营业时间实时核验：<a href="https://www.shanghaidisneyresort.com" target="_blank" style="color:var(--acc)">官网 →</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Appendix -->
+<section class="sec tint" id="appendix">
+  <div class="wrap">
+    <div class="sec-head"><h2>附录 · 兜底与溯源</h2><span class="tag">Appendix</span></div>
+    <div class="grid2">
+      <div class="app-card">
+        <h3>🆘 应急信息</h3>
+        <ul>
+          <li><b>紧急求助</b> 110 · 急救 120 · 火警 119</li>
+          <li><b>上海市中心医院</b> 瑞金医院（瑞金二路197号）· 长征医院（凤阳路415号）</li>
+          <li><b>异地补办证件</b> 就近派出所 · 上海市出入境管理局（福州路185号）</li>
+          <li><b>丢物/失物</b> 上海失物招领中心 962114</li>
+        </ul>
+        <p style="font-size:12px;color:var(--t3);margin-top:8px">号码核验于 2026-11-15，出行前请再次确认</p>
+      </div>
+      <div class="app-card">
+        <h3>📌 生成信息与数据源</h3>
+        <ul>
+          <li><b>本路书生成于</b> 2026-11-15，易变信息基于该时刻实时数据</li>
+          <li><b>车次/票价</b>：12306（<span class="badge live">🟢 实时</span>）<a href="https://www.12306.cn" target="_blank" style="color:var(--acc)">复核</a></li>
+          <li><b>航班</b>：航司官网/携程（<span class="badge live">🟢 实时</span>）</li>
+          <li><b>酒店价格</b>：携程/美团（<span class="badge est">⚪ AI估算</span>）</li>
+          <li><b>门票</b>：迪士尼官网（<span class="badge est">⚪ AI估算</span>）</li>
+          <li><b>外牌限行</b>：上海交通（请出行前确认）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="app-card">
+      <h3>🌧 全局兜底 Plan B（极端情况整体方案）</h3>
+      <ul>
+        <li><b>台风/强降雨季（6-9月）</b>：减少户外，迪士尼/朱家角改为室内展馆（上海博物馆、天文馆），外滩改江景餐厅室内观景</li>
+        <li><b>高铁大面积晚点</b>：改乘当日最晚航班返京，或延宿一晚次日返</li>
+        <li><b>身体不适</b>：市区医疗便利，随时可压缩景点、提前返程（改签高铁）</li>
+      </ul>
+    </div>
+    <div class="app-card">
+      <h3>💰 花费预估（人均）</h3>
+      <ul>
+        <li>高铁往返 <b>¥1100-1330</b> · 住宿2晚 <b>¥660-780</b></li>
+        <li>餐饮 <b>¥450-600</b> · 门票（登高/迪士尼可选）<b>¥100-900</b></li>
+        <li>市内交通 <b>¥80-120</b> · 合计约 <b>¥2200-3200</b></li>
+        <li style="color:var(--t3);font-size:12px">价格获取时间 2026-11-15，仅供参考</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    本路书为旅行规划参考，图源均已标注。<br>
+    车次/航班/票价/门票/酒店价格为 2026-11-15 实时或 AI 估算，出行前请以官方渠道二次确认。<br>
+    路线图与坐标均为示意，非实时轨迹与精确比例。
+  </div>
+</footer>
+
+<script>
+// Attraction toggle
+function toggleAttr(btn){
+  var attr = btn.closest('.attr');
+  attr.classList.toggle('open');
+}
+
+// Tab switch
+var tabs = document.querySelectorAll('#transTabs .tab');
+for (var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click', function(){
+    for (var j=0;j<tabs.length;j++) tabs[j].classList.remove('active');
+    this.classList.add('active');
+    var id = this.getAttribute('data-t');
+    var panes = document.querySelectorAll('.tab-pane');
+    for (var k=0;k<panes.length;k++) panes[k].classList.remove('show');
+    document.getElementById(id).classList.add('show');
+  });
+}
+
+// Nav highlight
+var navLinks = document.querySelectorAll('.nav-links a');
+var sections = [];
+for (var i=0;i<navLinks.length;i++){
+  var href = navLinks[i].getAttribute('href');
+  if (href) sections.push(document.getElementById(href.replace('#','')));
+}
+function updateNav(){
+  var nav = document.querySelector('.navbar');
+  var navH = nav.offsetHeight;
+  var vh = window.innerHeight;
+  var current = 0, bestVisible = -1;
+  for (var i=0;i<sections.length;i++){
+    if(!sections[i]) continue;
+    var r = sections[i].getBoundingClientRect();
+    var visibleTop = Math.max(r.top, navH);
+    var visibleBottom = Math.min(r.bottom, vh);
+    var visible = Math.max(0, visibleBottom - visibleTop);
+    if (visible > bestVisible){ bestVisible = visible; current = i; }
+  }
+  for (var j=0;j<navLinks.length;j++){
+    navLinks[j].classList.toggle('active', j===current);
+  }
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+window.addEventListener('resize', updateNav, {passive:true});
+updateNav();
+</script>
+
+<script>(function(){
+var d=document,b=d.body;if(!b)return;
+var old=b.querySelectorAll('[data-aigc-mark],#__xas_aigc_watermark__');
+for(var k=0;k<old.length;k++)old[k].parentNode&&old[k].parentNode.removeChild(old[k]);
+var f=d.createElement("div");
+f.id="__xas_aigc_watermark__";
+f.setAttribute("data-aigc-mark","true");
+f.style.cssText="position:fixed;bottom:8px;right:12px;z-index:2147483647;font-size:11px;padding:3px 7px;font-family:system-ui,sans-serif;pointer-events:none;color:rgba(30,30,30,0.6);background:rgba(255,255,255,0.4);border:0.5px solid rgba(0,0,0,0.08);border-radius:4px;line-height:1.4;backdrop-filter:blur(8px);";
+var paths=["M14.0072 26.6377C14.2318 25.9475 13.3696 25.4389 12.8659 25.9611C9.56694 29.3941 6.9736 33.4696 5.35587 37.9788C-0.86998 55.1279 7.72006 74.1728 24.7867 80.6891C33.1499 83.8815 41.0252 82.7894 44.7212 81.8812C54.0056 79.6016 63.1537 72.4609 66.7114 63.4447C67.1039 62.4525 66.6252 61.3286 65.6404 60.9222C63.78 60.1548 61.9263 59.3896 60.3721 58.7471C59.46 58.3702 58.4117 58.7402 57.9398 59.6076C56.4287 62.3753 54.8496 65.0568 52.4945 67.2274C46.0349 73.5893 36.1675 75.8621 27.5956 72.9036C14.6833 68.6487 7.76998 54.5307 12.124 41.7683C12.3668 41.0553 12.4916 40.3038 12.4621 39.55C12.242 33.8125 12.8228 30.2955 14.0072 26.6377Z","M73.6785 14.313C74.3682 14.5378 74.8765 13.675 74.3546 13.171C70.9241 9.86968 66.8514 7.27451 62.3454 5.65564C45.2084 -0.574603 26.1769 8.0215 19.6651 25.1002C16.4751 33.4692 17.5664 41.3501 18.474 45.0488C20.7519 54.3396 27.8876 63.4943 36.8974 67.0544C37.8889 67.4472 39.012 66.9681 39.4182 65.9827C40.185 64.1209 40.9497 62.2659 41.5918 60.7107C41.9684 59.7979 41.5986 58.7489 40.7318 58.2767C37.9661 56.7645 35.2865 55.1843 33.1174 52.8275C26.76 46.3634 24.4888 36.489 27.4452 27.9111C31.6971 14.9897 45.8051 8.07145 58.5586 12.4285C59.271 12.6715 60.022 12.7964 60.7753 12.7668C66.5088 12.5466 70.0233 13.1278 73.6785 14.313Z","M85.9922 73.9549C85.7676 74.6451 86.6298 75.1537 87.1335 74.6315C90.4324 71.1985 93.0258 67.123 94.6435 62.6138C100.869 45.4647 92.2793 26.4198 75.2127 19.9035C66.8495 16.7111 58.9742 17.8033 55.2782 18.7114C45.9938 20.991 36.8456 28.1317 33.288 37.1479C32.8955 38.1401 33.3742 39.264 34.3589 39.6704C36.2194 40.4378 38.0731 41.203 39.6273 41.8455C40.5394 42.2224 41.5876 41.8524 42.0596 40.985C43.5706 38.2173 45.1498 35.5358 47.5049 33.3652C53.9645 27.0033 63.8319 24.7305 72.4038 27.689C85.3161 31.9439 92.2294 46.0619 87.8754 58.8243C87.6326 59.5373 87.5078 60.2888 87.5373 61.0426C87.7574 66.7801 87.1766 70.2971 85.9922 73.9549Z","M26.2674 86.2849C25.5777 86.0601 25.0694 86.9229 25.5913 87.4269C29.0219 90.7282 33.0945 93.3234 37.6028 94.9423C54.7398 101.173 73.7713 92.5764 80.2831 75.4977C83.4731 67.1287 82.3818 59.2478 81.4742 55.5491C79.1963 46.2583 72.0606 37.1036 63.0508 33.5435C62.0593 33.1507 60.9362 33.6298 60.53 34.6152C59.7632 36.477 58.9985 38.3297 58.3564 39.885C57.9798 40.7977 58.3496 41.8467 59.2163 42.3212C61.9821 43.8334 64.6617 45.4114 66.8285 47.7704C73.1859 54.2345 75.4571 64.1089 72.5007 72.6869C68.2488 85.6082 54.1408 92.5265 41.3874 88.1694C40.6749 87.9264 39.9239 87.8015 39.1706 87.8311C33.4371 88.0513 29.9226 87.4701 26.2674 86.2826V86.2849Z"];
+b.appendChild(f);
+var svg='<svg width="14" height="14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:-2px;margin:0 4px">';
+for(var i=0;i<paths.length;i++)svg+='<path d="'+paths[i]+'" fill="rgba(30,30,30,0.5)"/>';
+svg+="</svg>";
+f.innerHTML="本页面由"+svg+"超级小爱AI生成";
+})();</script>
+</body>
+</html>
